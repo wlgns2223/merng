@@ -1,21 +1,68 @@
-import UserModel ,{User} from "../../model/User";
+import UserModel from "../../model/User";
 import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken";
-import { BeAnObject, IObjectWithTypegooseFunction } from "@typegoose/typegoose/lib/types";
-import { Document } from "mongoose";
 
-interface ICustomDocument extends User, Document<any,BeAnObject,any>, IObjectWithTypegooseFunction{
-    _doc?: any
-}
+import { ICustomUser } from "../../types/user/ICustomUser";
+import {UserInputError} from "apollo-server";
+import {validateRegisterInput,validateLoginInput} from "../../utils/validator";
+import {generateToken} from "../../utils/generateToken";
 
 export const userResolver = {
     Mutation: {
+
+        login: async (_, args, context, info) => {
+            const {username,password} = args;
+            const {valid, errors} = validateLoginInput(username,password);
+            const user = await UserModel.findOne({username}) as ICustomUser;
+
+            if(!valid){
+                throw new UserInputError('Invalid Input',{errors});
+            }
+
+            if(!user){
+                throw new UserInputError('User Not Found',{
+                    errors: {
+                        username: 'User Not Found'
+                    }
+                });
+            }
+
+            const isMatch = await bcrypt.compare(password, user.password);
+            if(!isMatch) {
+                throw new UserInputError('Wrong Password',{
+                    errors: {
+                        username: 'Wrong Password'
+                    }
+                });
+            }
+
+            const token = generateToken(user);
+            
+            return {
+                ...user._doc,
+                id: user._id,
+                token
+            }
+        },
         register: async (_ ,args,context,info) => {
             // validate user data
             // Check if User does already exist
             // hash password and create an auth token
             const { registerInput } = args;
-            let {username, password, email} = registerInput;
+            let {username, password, email,confirmPassword} = registerInput;
+            const {valid, errors} = validateRegisterInput(username,email,password,confirmPassword);
+            if(!valid){
+                throw new UserInputError('Invalid Inputs',{errors});
+            }
+
+            const user = await UserModel.findOne({username});
+            if(user){
+                throw new UserInputError('User is taken',{
+                    errors: {
+                        username: 'This username is taken',
+                    },
+                });
+            }
+
             password = await bcrypt.hash(password,12);
 
             const newUser = new UserModel({
@@ -23,19 +70,11 @@ export const userResolver = {
                 password,
                 email,
                 createdAt: new Date().toISOString()
-            });
+            }) as ICustomUser;
 
-            const res:ICustomDocument = await newUser.save();
-            const token = jwt.sign({
-                id: res.id,
-                email: res.email,
-                username: res.username,
-            }, process.env.SECRET_KEY as string,
-            {
-                expiresIn: '1h'
-            });
-                       
-            
+            const res = await newUser.save();
+            const token = generateToken(res);
+                    
             return {
                 ...res._doc,
                 id: res._id,
