@@ -11,9 +11,6 @@ class Post {
     @prop({required: true})
     username: string;
 
-    @prop({required: true,default: Date.now})
-    createdAt: string;
-
     @prop({required: true})
     comments: ICommentType[]
 
@@ -24,5 +21,9 @@ class Post {
     user: ObjectId
 }
 
-const PostModel = getModelForClass(Post);
+const PostModel = getModelForClass(Post,{
+    schemaOptions: {
+        timestamps: true
+    }
+});
 export default PostModel;
