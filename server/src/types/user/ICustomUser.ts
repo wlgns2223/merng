@@ -2,6 +2,8 @@ import { BeAnObject, IObjectWithTypegooseFunction } from "@typegoose/typegoose/l
 import { Document } from "mongoose";
 import {User} from "../../model/User";
 
-export interface ICustomUser extends User, Document<any,BeAnObject,any>, IObjectWithTypegooseFunction{
+interface ICustomUser extends User , Document<any,BeAnObject,any> , IObjectWithTypegooseFunction{
     _doc?: any
 }
+
+export default ICustomUser;

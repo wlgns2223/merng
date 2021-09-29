@@ -8,6 +8,7 @@ const indexResolver = {
     Mutation: {
 
         ...userResolver.Mutation,
+        ...postResolver.Mutation,
 
     }
 }

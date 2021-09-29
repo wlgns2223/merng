@@ -10,6 +10,11 @@ dotenv.config();
 const server = new ApolloServer({
     typeDefs,
     resolvers: indexResolver,
+    context: ({req}) => {
+        req.headers.authorization = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNTNmYWZiMmY0NTZkNmQzZmUxMGFiMyIsImVtYWlsIjoidXNlckBnbWFpbC5jb20iLCJ1c2VybmFtZSI6InVzZXIiLCJpYXQiOjE2MzI4OTQ2MTd9.MlstUBiUfpwJ3XVLY9sSp4uUKBAvRlSgoAykAMXmp_8"
+
+        return {req};
+    },
 });
 
 const mongodbConnectURL = process.env.MONGODB as string;

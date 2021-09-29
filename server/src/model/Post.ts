@@ -11,10 +11,10 @@ class Post {
     @prop({required: true})
     username: string;
 
-    @prop({required: true})
+    @prop()
     comments: ICommentType[]
 
-    @prop({required: true})
+    @prop()
     likes: ILikesType[]
 
     @prop({required: true,ref: 'User'})
