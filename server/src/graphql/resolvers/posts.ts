@@ -9,6 +9,16 @@ export const postResolver = {
             } catch (error) {
                 throw new Error(error);
             }
+        },
+        getPost: async(_, args) =>{
+            const {postId} = args;
+            try{
+                const post = await PostModel.findById({postId});
+                if(post) return post;
+                else throw new Error('Post Not Found');
+            } catch (error){
+                throw new Error(error);
+            }
         }
    }
 }
