@@ -1,4 +1,5 @@
-import IDecodedData from "../../types/jwt/decodedData";
+import { AuthenticationError } from "apollo-server-errors";
+
 import PostModel from "../../model/Post";
 import veryfyUser from "../../utils/authCheck";
 
@@ -33,7 +34,7 @@ export const postResolver = {
            
            const {body} = args;
            
-           const user = veryfyUser(context) as IDecodedData;
+           const user = veryfyUser(context);
            const newPost = new PostModel({
                body,
                user: user.id,
@@ -43,7 +44,22 @@ export const postResolver = {
            const post = await newPost.save();
 
            return post;
+       },
+       async deletePost(_, args, context){
+        const {postId } = args;
+           const user = veryfyUser(context);
+           try {
+               const post = await PostModel.findById(postId);
+               if(user.username === post?.username){
+                   await post?.delete();
+                   return "Successfully deleted";
+               } else {
+                   throw new AuthenticationError('Action Not Allowed');
+               }
 
+           } catch(error){
+               throw new Error(error);
+           }
        }
    }
 }
