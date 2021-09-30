@@ -3,11 +3,29 @@ import { gql } from "apollo-server";
 export const typeDefs = gql`
 
     type Post {
-        id: ID!
+        _id: ID!
         body: String!
         createdAt: String!
         username: String!
+        comments: [Comment]!
+        likes: [Like]!
+        likeCount: Int!
+        commentCount: Int!
     }
+
+    type Comment {
+        _id: ID!
+        body: String!
+        username: String!
+        createdAt: String!
+    }
+
+    type Like {
+        _id: ID!
+        username: String!
+        createdAt: String!
+    }
+    
 
     input RegisterInput{
         username: String!
@@ -17,7 +35,7 @@ export const typeDefs = gql`
     }
 
     type User {
-        id: ID!
+        _id: ID!
         email: String!
         token: String!
         username: String!
@@ -33,7 +51,10 @@ export const typeDefs = gql`
         register(registerInput: RegisterInput): User!
         login(username: String!, password: String!):User!
         createPost(body: String!): Post!
-        deletePost(postId: ID!): String!
+        deletePost(postId: ID!,commentId: ID!): Post!
+        likePost(postId: ID!): Post!
+        createComment(postId: ID!, body: String): Post!
+        deleteComment(postId: ID!, commentId: ID! ): Post!
     }
 `
 

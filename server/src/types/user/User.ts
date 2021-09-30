@@ -1,10 +1,10 @@
 import { ObjectId } from "mongoose";
 
 interface IUser {
-    _id?: ObjectId
-    username?: String
-    email?: String
-    createdAt?:Date
+    _id: ObjectId
+    username: string
+    email: string
+    createdAt:Date
 }
 
 export default IUser;

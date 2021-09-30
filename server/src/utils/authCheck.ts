@@ -3,7 +3,7 @@ import { AuthenticationError } from "apollo-server-errors";
 import IDecodedData from "../types/jwt/decodedData";
 
 
-const veryfyUser = (context) => {
+const verifyUser = (context) => {
     const authKey = context.req.headers.authorization;    
     
     if(authKey){
@@ -20,4 +20,4 @@ const veryfyUser = (context) => {
     throw new Error('Authentification token must be provided ');
 }
 
-export default veryfyUser
+export default verifyUser
