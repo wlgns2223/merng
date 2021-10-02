@@ -7,6 +7,7 @@ import verifyUser from "../../utils/authCheck";
 export const postResolver = {
     Query: {
         getPosts: async (_,__,context) => {
+            
             verifyUser(context);
     
             try {
