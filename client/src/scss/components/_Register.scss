@@ -1,0 +1,12 @@
+.register-container {
+  width: 400px;
+  margin: auto;
+}
+
+.register {
+  &__title {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+  }
+}

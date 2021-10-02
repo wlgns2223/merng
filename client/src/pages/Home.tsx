@@ -1,8 +1,7 @@
 import React from "react";
 import gql from "graphql-tag"
 
-import "../scss/components/_GridColumn.scss";
-import "../scss/components/_GridTitle.scss"
+import "../scss/components/_Home.scss";
 
 import {useQuery} from "@apollo/react-hooks"
 import {Grid} from "semantic-ui-react";
