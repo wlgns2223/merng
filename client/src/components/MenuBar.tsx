@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState,useEffect} from "react";
 import { Menu, MenuItemProps } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
@@ -10,9 +10,12 @@ const MenuBar: React.FC<MenuBarProps> = (props) => {
 
     const currentPath = useCurrentPath();
     const [activeItem, setActiveItem ] = useState(currentPath);
-    const onItemClick = (event,{name}:MenuItemProps) => setActiveItem(name as string);    
-    
-    
+    const onItemClick = (event,{name}:MenuItemProps) => setActiveItem(name as string);
+
+    useEffect(() => {
+        setActiveItem(currentPath);
+    }, [currentPath]);
+
     return (
         <div>
             <Menu pointing secondary size="huge" color="teal">

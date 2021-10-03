@@ -12,7 +12,7 @@ const server = new ApolloServer({
     typeDefs,
     resolvers: indexResolver,
     context: ({req}) => {
-        req.headers.authorization = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTUzZmFmYjJmNDU2ZDZkM2ZlMTBhYjMiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwidXNlcm5hbWUiOiJ1c2VyIiwiaWF0IjoxNjMzMTc2OTYyLCJleHAiOjE2MzMyMTI5NjJ9.rJBNOsnBoeAP5nIwjoQC9tmAayxk9sPZVXIgVVzRd8Y"
+        req.headers.authorization = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTUzZmFmYjJmNDU2ZDZkM2ZlMTBhYjMiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwidXNlcm5hbWUiOiJ1c2VyIiwiaWF0IjoxNjMzMjM1MjU0LCJleHAiOjE2MzMyNzEyNTR9.4HTGWlRuNjfJTo6kM4LzZjxOejWCEzkJZLLA4mEnEJs"
         return {req};
     },
 });

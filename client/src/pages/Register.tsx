@@ -2,11 +2,13 @@ import React,{useState} from "react";
 import { Form,Button } from "semantic-ui-react";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
+import { useHistory } from "react-router-dom";
+import useForm from "src/utils/hooks/useForm";
 
 import "../scss/components/_Register.scss"
 
 interface RegisterProps {}
-interface IInputError {
+interface IRegisterInput {
     username?: string
     password?: string
     confirmPassword?: string
@@ -20,36 +22,27 @@ const Register: React.FC<RegisterProps> = (props) => {
         confirmPassword: '',
         email: '',
     };
-    const [errors, setErrors] = useState<IInputError>(initialInput);
-    const [ values,setValues ] = useState(initialInput);
-    const onChange = (event) => {
-        setValues({
-            ...values,
-            [event.target.name] : event.target.value
-        });        
-    }
-
-    const res = useMutation(REGISTER_USER_MUTATION,
+    const [errors, setErrors] = useState<IRegisterInput>(initialInput);
+    const [ values, onChange, onSubmit ] = useForm(registerUser,initialInput);
+       
+    const history = useHistory();    
+    const [ addUser, { loading } ] = useMutation(REGISTER_USER_MUTATION,
                             {
-                                update(proxy,result){
-                                    console.log(result);
+                                update: (_,result)=>{
+                                    history.push('/');                                    
                                 },
-                                onError(error){
+                                onError: (error)=>{
                                     const errors = error.graphQLErrors[0].extensions!.errors;
                                     setErrors(errors);                                    
                                 },
                                 variables: values
                             });
 
-    const [addUser , {loading}] = res;    
-    
-    
-    const onSubmit = (event) => {
-        event.preventDefault();
-        setValues(initialInput);        
+    // Hoisting for adduser callback to useForm
+    function registerUser() {
         addUser();
     }
-
+    
     return (
         <div className="register-container">
             <Form onSubmit={onSubmit} noValidate className={loading ? 'loading' : 'register'} >

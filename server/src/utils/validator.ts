@@ -4,7 +4,7 @@ export const validateRegisterInput = (username: string, email: string, password:
     const errors:IValidError = {};
 
     if(username.trim() === '' ) errors.username = 'Username Must Not Be Empty';
-    if(username.trim() === '') errors.email = 'Email Must Not Be Empty';
+    if(email.trim() === '') errors.email = 'Email Must Not Be Empty';
     else {
         const emailRegEx = /[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]$/;
         if(!email.match(emailRegEx)) errors.email = 'Email Must Be a Valid Email Address';

@@ -7,9 +7,7 @@ import verifyUser from "../../utils/authCheck";
 export const postResolver = {
     Query: {
         getPosts: async (_,__,context) => {
-            
-            verifyUser(context);
-    
+                
             try {
                 const posts = await PostModel.find();
                 return posts;
@@ -20,8 +18,6 @@ export const postResolver = {
         getPost: async(_, args) =>{
             
             const {postId} = args;
-            
-            
             try{
                 const post = await PostModel.findById(postId);
                 
