@@ -30,7 +30,7 @@ export const userResolver = {
             if(!isMatch) {
                 throw new UserInputError('Wrong Password',{
                     errors: {
-                        username: 'Wrong Password'
+                        password: 'Wrong Password'
                     }
                 });
             }

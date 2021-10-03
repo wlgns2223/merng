@@ -1,13 +1,15 @@
-import React, { useState,useEffect} from "react";
-import { Menu, MenuItemProps } from "semantic-ui-react";
-import { Link } from "react-router-dom";
-
+import React, { useState, useEffect, useContext} from "react";
+import {  MenuItemProps } from "semantic-ui-react";
+import { AuthContext } from "../context/auth";
 import useCurrentPath from "../utils/useCurrentPath";
+import MenuBarWithAuth from "../components/MenuBarWithAuth"
+import MenuBarWIthoutAuth from "../components/MenuBarWithoutAuth";
 
 interface MenuBarProps {}
 
 const MenuBar: React.FC<MenuBarProps> = (props) => {
 
+    const {user, logout } = useContext(AuthContext);
     const currentPath = useCurrentPath();
     const [activeItem, setActiveItem ] = useState(currentPath);
     const onItemClick = (event,{name}:MenuItemProps) => setActiveItem(name as string);
@@ -16,35 +18,10 @@ const MenuBar: React.FC<MenuBarProps> = (props) => {
         setActiveItem(currentPath);
     }, [currentPath]);
 
+
     return (
-        <div>
-            <Menu pointing secondary size="huge" color="teal">
-                <Menu.Item 
-                    name="home"
-                    active ={activeItem === 'home'}
-                    onClick={onItemClick}
-                    as={Link}
-                    to="/"
-                />
-                
-                <Menu.Menu position ="right">
-                    <Menu.Item 
-                        name="login"
-                        active = {activeItem === 'login'}
-                        onClick = {onItemClick}
-                        as={Link}
-                        to="/login"
-                    />
-                    <Menu.Item 
-                        name="register"
-                        active = {activeItem === 'register'}
-                        onClick = {onItemClick}
-                        as={Link}
-                        to="/register"
-                    />
-                </Menu.Menu>
-            </Menu>
-        </div>
+            user ?  <MenuBarWithAuth user={user} logout={logout}/> 
+                 :  <MenuBarWIthoutAuth activeItem={activeItem} onItemClick={onItemClick}/>
     )
 }
 
