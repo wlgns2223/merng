@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext} from "react";
 import {  MenuItemProps } from "semantic-ui-react";
 import { AuthContext } from "../context/auth";
-import useCurrentPath from "../utils/useCurrentPath";
+import useCurrentPath from "../utils/hooks/useCurrentPath";
 import MenuBarWithAuth from "../components/MenuBarWithAuth"
 import MenuBarWIthoutAuth from "../components/MenuBarWithoutAuth";
 
