@@ -4,7 +4,7 @@ import IDecodedData from "../types/jwt/decodedData";
 
 
 const verifyUser = (context) => {
-    const authKey = context.req.headers.authorization;    
+    const authKey = context.req.headers.authorization;   
     
     if(authKey){
 

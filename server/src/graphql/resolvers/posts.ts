@@ -36,9 +36,10 @@ export const postResolver = {
            if(body.trim() === '') throw new Error('Body Must Not Be Empty');
            
            const user = verifyUser(context);
+           
            const newPost = new PostModel({
                body,
-               user: user.id,
+               user: user._id,
                username: user.username,
            });
 

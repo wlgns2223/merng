@@ -5,7 +5,7 @@ import { AuthContext } from "../context/auth";
 const AuthRoute = ({ component:Component, ...rest } ) => {
     const { user } = useContext(AuthContext);
     if(user) return <Redirect to="/"/>
-
+    
     return (
         <Route 
             {...rest}

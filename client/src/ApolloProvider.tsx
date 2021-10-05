@@ -1,22 +1,35 @@
-import {ApolloClient,InMemoryCache,createHttpLink,ApolloProvider}from "@apollo/client";
+import { ApolloClient,
+         InMemoryCache, 
+         createHttpLink, 
+         ApolloProvider, 
+         ApolloLink,
+         from }from "@apollo/client";
 import React from "react";
 import App from "./App";
+import { JWT_TOKEN } from "./globalVar";
+
+const authLink = new ApolloLink((operation, forward) => {
+    operation.setContext(({headers ={} }) => ({
+        headers: {
+            ...headers,
+            authorization: localStorage.getItem(JWT_TOKEN) || null,
+        }
+    }));
+
+    return forward(operation);
+});
 
 const httpLink = createHttpLink({
     uri: 'http://localhost:4000'
 });
 
 const client = new ApolloClient({
-    link: httpLink,
+    link: from([authLink,httpLink] ) ,
     cache: new InMemoryCache(),
     connectToDevTools: true,
 });
 
-interface ChildrenProps  {
-    children?: React.ReactNode
-}
-
-const AppWithApolloClient: React.FC<ChildrenProps> = ({children}) => {
+const AppWithApolloClient: React.FC = () => {
     return (
         <ApolloProvider client={client}>
             <App/>
