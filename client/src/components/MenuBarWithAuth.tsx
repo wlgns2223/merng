@@ -1,10 +1,10 @@
 import React from "react";
 import { Menu, MenuItemProps } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import { User } from "../types/User"
+import { IUser } from "../types/User"
 
 interface IMenuBarWithAuth {
-    user: User
+    user: IUser
     logout: (event:any, data?: MenuItemProps) => void
 }
 

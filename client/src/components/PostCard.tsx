@@ -1,8 +1,10 @@
-import React from "react";
+import React,{ useContext } from "react";
 import moment from "moment";
-
+import { AuthContext } from "../context/auth";
 import { Card, Image,Button, Icon, Label } from "semantic-ui-react";
 import {Link} from "react-router-dom";
+import LikeButton from "../components/LinkButton";
+import IPost from "../types/Post"
 
 interface ILike {
     _id?: string
@@ -28,13 +30,17 @@ interface IPostCardProps {
     comments?: IComment[]
 }
 
-const PostCard: React.FC<IPostCardProps> = ({_id,body,createdAt,username,likeCount,commentCount,likes,comments}) => {    
-        
-    const onLikePost = () => {console.log("Like Post");}
+const PostCard: React.FC<IPostCardProps> = ({_id,body,createdAt,username,likeCount,commentCount,likes,comments}) => {  
 
-    const onCommentPost = () => { console.log("Comment on Post");}
+    const { user } = useContext(AuthContext);
+    const isMyPost = user && user.username === username;
     
-
+    const post = {
+        _id ,
+        likes,
+        likeCount
+    } as IPost
+    
     return (
         <Card fluid>
             <Card.Content>
@@ -44,15 +50,8 @@ const PostCard: React.FC<IPostCardProps> = ({_id,body,createdAt,username,likeCou
                 <Card.Description>{body}</Card.Description>
             </Card.Content>
             <Card.Content extra>
-                <Button as="div" labelPosition="right" onClick={onLikePost}>
-                    <Button color="teal" basic>
-                        <Icon name="heart"/>
-                    </Button>
-                    <Label basic color="teal" pointing="left">
-                        {likeCount}
-                    </Label>
-                </Button>
-                <Button as="div" labelPosition="left" onClick={onCommentPost}>
+                <LikeButton user={user} post={post} />
+                <Button labelPosition="right" as={Link} to={`/posts/${_id}`} >
                     <Button color="blue" basic>
                         <Icon name="comments"/>
                     </Button>
@@ -60,8 +59,18 @@ const PostCard: React.FC<IPostCardProps> = ({_id,body,createdAt,username,likeCou
                         {commentCount }
                     </Label>
                 </Button>
+                {
+                    isMyPost && (
+                        <Button as="div"
+                                color="red"
+                                onClick={() => {console.log('delete')}}
+                                floated="right"
+                        >
+                            <Icon name="trash" style={{margin: 0}} />
+                        </Button>
+                    )
+                }
             </Card.Content>
-            
         </Card>       
     )
 }

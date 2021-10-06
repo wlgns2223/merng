@@ -35,7 +35,9 @@ const Home: React.FC = (props) => {
                                username,
                                _id,
                                likeCount,
-                               commentCount} = post;
+                               commentCount,
+                                likes,
+                                comments} = post;
                         return (
                             <Grid.Column className="GridColumn" key={_id}>
                                 <PostCard _id={_id} 
@@ -44,6 +46,8 @@ const Home: React.FC = (props) => {
                                           username={username}
                                           likeCount={likeCount}
                                           commentCount={commentCount}
+                                          likes={likes}
+                                          comments={comments}
                                 />
                             </Grid.Column>
                         )

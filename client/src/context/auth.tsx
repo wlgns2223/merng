@@ -1,11 +1,11 @@
 import  {createContext,useReducer} from "react";
-import { User } from "../types/User"
+import { IUser } from "../types/User"
 import { JWT_TOKEN } from "../globalVar";
 import { ITokenPayload } from "src/types/Auth";
 import checkTokenExpiry from "../utils/checkTokenExpiry";
 
 export const AuthContext = createContext({
-    user: {} as User,
+    user: {} as IUser,
     login: (userData) => {},
     logout: () => {},
 });
@@ -41,7 +41,7 @@ const AuthProvider = ({ children }) => {
 
     const [state, dispatch] = useReducer(authReducer,initialValue );
 
-    const login = (userData: User) => {
+    const login = (userData: IUser) => {
         localStorage.setItem(JWT_TOKEN,userData.token);
         return dispatch({type: 'LOGIN', payload: userData});
     };
