@@ -13,20 +13,20 @@ interface ILikeButtonProp {
     post: IPost
 }
 
-const LikeButton: React.FC<ILikeButtonProp> = ({user, post}) => {
+const LikeButton: React.FC<ILikeButtonProp> = ({user, post:{_id, likes, likeCount}}) => {
     const [ liked ,setLiked ] = useState(false);
     useEffect(()=>{
       
-      if(user && post.likes){  
-        const isMyLike = post.likes.find((like) => like.username === user.username);        
+      if(user && likes){  
+        const isMyLike = likes.find((like) => like.username === user.username);        
         if(isMyLike) setLiked(true)
         else setLiked(false);
       }
 
-    },[user,post]);
+    },[user,likes]);
 
     const [ onLikePost ] = useMutation(LIKE_POST_MUTATION,{
-      variables: { postId: post._id },
+      variables: { postId: _id },
     });
 
     const likeButtonOnLikedStatus = liked ? (
@@ -51,7 +51,7 @@ const LikeButton: React.FC<ILikeButtonProp> = ({user, post}) => {
       <Button as="div"  labelPosition="right" onClick={() => {onLikePost()}}>
         <MyPopup content={liked ? 'Unlike' : 'Like'}>{likeButton}</MyPopup>
         <Label basic color="teal" pointing="left">
-          {post.likeCount}
+          {likeCount}
         </Label>
       </Button>
     );

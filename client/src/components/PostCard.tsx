@@ -51,7 +51,7 @@ const PostCard: React.FC<IPostCardProps> = ({_id,body,createdAt,username,likeCou
             </Card.Content>
             <Card.Content extra>
                 <LikeButton user={user} post={post} />
-                <Button labelPosition="right" as={Link} to={`/posts/${_id}`} >
+                <Button labelPosition="right" as={Link} to={`/post/${_id}`} >
                     <Button color="blue" basic>
                         <Icon name="comments"/>
                     </Button>

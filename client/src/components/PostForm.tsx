@@ -21,7 +21,6 @@ const PostForm:React.FC = () => {
                 data:{
                     ...data,
                     getPosts: [result.data.createPost, ...data.getPosts],
-                    
             }});
             values.body = ''   
         }
