@@ -64,7 +64,7 @@ const SinglePost:React.FC<RouteComponentProps> = (props) => {
         <Card fluid>
           <Card.Content>
             <Card.Header>{username}</Card.Header>
-            <Card.Meta>{moment(parseInt(createdAt)).fromNow()}</Card.Meta>
+            <Card.Meta>{moment(createdAt).fromNow()}</Card.Meta>
             <Card.Description>{body}</Card.Description>
           </Card.Content>
           <hr/>
@@ -125,6 +125,7 @@ const SinglePost:React.FC<RouteComponentProps> = (props) => {
               <Card fluid key={comment._id}>
                 <Card.Content>
                   {
+                    
                   user && user.username === comment.username && (
                       <DeleteButton postId={_id} commentId={comment._id} />
                   )}

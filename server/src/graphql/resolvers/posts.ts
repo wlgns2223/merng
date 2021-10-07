@@ -76,7 +76,7 @@ export const postResolver = {
                 post.likes.push({
                     _id: (new ObjectId()).toString(),
                     username,
-                    createdAt: new Date().toISOString(),
+                    createdAt:Date.now().toString(),
                 });
             }
             post.save();

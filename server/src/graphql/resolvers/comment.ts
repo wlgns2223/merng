@@ -23,8 +23,7 @@ export const commentResolver = {
                     _id: (new ObjectId()).toString(),
                     body,
                     username: user.username as string,
-                    createdAt: (new Date()).toISOString(), 
-
+                    createdAt: Date.now().toString(), 
                 });
 
                 await post.save();
