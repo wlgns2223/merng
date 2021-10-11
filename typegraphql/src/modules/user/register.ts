@@ -1,14 +1,32 @@
-import {Query, Resolver, Mutation } from "type-graphql";
+import { Query, Resolver, Mutation, Arg } from "type-graphql";
+import bcrypt from "bcrypt";
+import UserModel, { User } from "../../model/user";
+import { RegisterInput } from "./register/registerInput";
 
 @Resolver()
 export class RegisterResolver {
-    @Query(()=>String)
-    async hello() {
-        return "hello";
-    }
+  @Query(() => String)
+  async hello() {
+    return "hello";
+  }
 
-    @Mutation(()=> String)
-    async register() {
-        return "World";
-    }
+  @Mutation(() => User)
+  async register(
+    @Arg("input") { firstName, lastName, email, password }: RegisterInput
+  ) {
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const isUserAlreadyExist = await UserModel.findOne({ email });
+    if (isUserAlreadyExist) return Error("User already Exists");
+
+    const user = await UserModel.create({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+    });
+
+    const newUser = await user.save();
+
+    return newUser;
+  }
 }

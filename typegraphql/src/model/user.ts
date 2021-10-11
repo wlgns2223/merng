@@ -1,20 +1,35 @@
-import {getModelForClass,prop} from "@typegoose/typegoose"
+import { getModelForClass, prop } from "@typegoose/typegoose";
+import { Field, ObjectType, Root } from "type-graphql";
+// import "reflect-metadata";
 
+@ObjectType()
 export class User {
+  @Field()
+  @prop()
+  firstName: string;
 
-    @prop()
-    firstname: string;
+  @Field()
+  @prop()
+  lastName: string;
 
-    @prop()
-    lastName: string;
+  @Field()
+  @prop()
+  password: string;
 
-    @prop()
-    password: string; 
-    
-    @prop({unique: true})
-    email: string; 
+  @Field()
+  @prop({ unique: true })
+  email: string;
+
+  @Field()
+  name(@Root() parent: User): string {
+    return `${parent.firstName} ${parent.lastName}`;
+  }
 }
 
-const UserModel = getModelForClass(User);
+const UserModel = getModelForClass(User, {
+  schemaOptions: {
+    timestamps: true,
+  },
+});
 
 export default UserModel;
