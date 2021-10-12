@@ -1,6 +1,5 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 import { Field, ObjectType, Root } from "type-graphql";
-// import "reflect-metadata";
 
 @ObjectType()
 export class User {
