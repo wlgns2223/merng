@@ -6,6 +6,6 @@ declare module "express-session" {
   }
 }
 
-export interface Context {
+export interface MyContext {
   req: Request;
 }

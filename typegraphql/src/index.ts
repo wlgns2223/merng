@@ -1,15 +1,18 @@
 import "reflect-metadata";
-import { ApolloServer } from "apollo-server-express";
 import Express from "express";
+import { ApolloServer } from "apollo-server-express";
 import dotenv from "dotenv";
 import { connect } from "mongoose";
 import { buildSchema } from "type-graphql";
-import { RegisterResolver } from "./modules/user/register";
-import { LoginResolver } from "./modules/user/login";
-import session from "express-session";
 import connectRedis from "connect-redis";
 import Redis from "ioredis";
-import cors from "cors";
+import session from "express-session";
+
+import { RegisterResolver } from "./modules/user/register";
+import { LoginResolver } from "./modules/user/login";
+import { MeResolver } from "./modules/user/me";
+import { MyContext } from "./types/types";
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 
 const connectMongoDB = () => {
   const mongodbConnectURL = process.env.MONGODB as string;
@@ -22,24 +25,21 @@ const main = async () => {
   dotenv.config();
 
   const schema = await buildSchema({
-    resolvers: [RegisterResolver, LoginResolver],
+    resolvers: [RegisterResolver, LoginResolver, MeResolver],
+    authChecker: ({ context }) => {
+      return !!context.session.userId;
+    },
   });
 
   const apolloServer = new ApolloServer({
     schema,
-    context: ({ req }: any) => ({ req }),
+    context: ({ req }): MyContext => ({ req }),
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
   });
   const app = Express();
-  await apolloServer.start();
   const redis = new Redis();
   const RedisStore = connectRedis(session);
-
-  app.use(
-    cors({
-      credentials: true,
-      origin: "http://localhost:3000",
-    })
-  );
+  await apolloServer.start();
 
   app.use(
     session({
@@ -52,17 +52,24 @@ const main = async () => {
       saveUninitialized: false,
       cookie: {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: false,
         maxAge: 1000 * 60 * 60 * 24 * 7 * 365,
+        sameSite: "strict",
       },
     })
   );
 
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({
+    app,
+    cors: {
+      credentials: true,
+      origin: "http://localhost:3000",
+    },
+  });
 
   connectMongoDB();
-  app.listen(4000, () => {
-    console.log(`Server is running at ...!!`);
+  app.listen(5000, () => {
+    console.log(`Server is running at 5000...!!`);
   });
 };
 
