@@ -4,6 +4,8 @@ import UserModel, { User } from "../../model/user";
 import { RegisterInput } from "./register/registerInput";
 import { isAuth } from "../middleware/isAuth";
 import { logger } from "../middleware/logger";
+import sendEmail from "../../utils/sendEmail";
+import createConfirmURL from "../../utils/createConfirmUrl";
 
 @Resolver()
 export class RegisterResolver {
@@ -28,8 +30,9 @@ export class RegisterResolver {
       password: hashedPassword,
     });
 
-    const newUser = await user.save();
+    const conFirmUrl = await createConfirmURL(user.id);
+    await sendEmail(email, conFirmUrl);
 
-    return newUser;
+    return user;
   }
 }

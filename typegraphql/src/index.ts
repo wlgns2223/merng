@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import { connect } from "mongoose";
 import { buildSchema } from "type-graphql";
 import connectRedis from "connect-redis";
-import Redis from "ioredis";
+
 import session from "express-session";
 
 import { RegisterResolver } from "./modules/user/register";
@@ -13,6 +13,7 @@ import { LoginResolver } from "./modules/user/login";
 import { MeResolver } from "./modules/user/me";
 import { MyContext } from "./types/types";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
+import redisSingletone from "./utils/redis";
 
 const connectMongoDB = () => {
   const mongodbConnectURL = process.env.MONGODB as string;
@@ -37,14 +38,13 @@ const main = async () => {
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
   });
   const app = Express();
-  const redis = new Redis();
   const RedisStore = connectRedis(session);
   await apolloServer.start();
 
   app.use(
     session({
       store: new RedisStore({
-        client: redis as any,
+        client: redisSingletone as any,
       }),
       name: "qid",
       secret: "asdfasdf",

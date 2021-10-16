@@ -18,11 +18,10 @@ export class LoginResolver {
     const isValid = await bcrypt.compare(password, user.password);
 
     if (!isValid) return new Error("Invalid Password");
+    if (!user.isConfirmed) return new Error("User Not Confirmed");
 
     context.req.session!.userId = user.id;
-    context.req.session!.save(() => {
-      console.log({ context: context.req.session });
-    });
+    context.req.session!.save();
 
     return user;
   }

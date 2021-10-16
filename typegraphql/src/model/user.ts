@@ -23,6 +23,9 @@ export class User {
   name(@Root() parent: User): string {
     return `${parent.firstName} ${parent.lastName}`;
   }
+
+  @prop({ default: false })
+  isConfirmed: boolean;
 }
 
 const UserModel = getModelForClass(User, {
