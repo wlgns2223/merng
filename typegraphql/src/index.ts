@@ -11,6 +11,7 @@ import session from "express-session";
 import { RegisterResolver } from "./modules/user/register";
 import { LoginResolver } from "./modules/user/login";
 import { MeResolver } from "./modules/user/me";
+import { ConfirmUserResolver } from "./modules/user/confirmUser";
 import { MyContext } from "./types/types";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import redisSingletone from "./utils/redis";
@@ -26,7 +27,12 @@ const main = async () => {
   dotenv.config();
 
   const schema = await buildSchema({
-    resolvers: [RegisterResolver, LoginResolver, MeResolver],
+    resolvers: [
+      RegisterResolver,
+      LoginResolver,
+      MeResolver,
+      ConfirmUserResolver,
+    ],
     authChecker: ({ context: { req } }) => {
       return !!req.session.userId;
     },
