@@ -7,11 +7,6 @@ import { buildSchema } from "type-graphql";
 import connectRedis from "connect-redis";
 
 import session from "express-session";
-
-import { RegisterResolver } from "./modules/user/register";
-import { LoginResolver } from "./modules/user/login";
-import { MeResolver } from "./modules/user/me";
-import { ConfirmUserResolver } from "./modules/user/confirmUser";
 import { MyContext } from "./types/types";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import redisSingletone from "./utils/redis";
@@ -27,12 +22,7 @@ const main = async () => {
   dotenv.config();
 
   const schema = await buildSchema({
-    resolvers: [
-      RegisterResolver,
-      LoginResolver,
-      MeResolver,
-      ConfirmUserResolver,
-    ],
+    resolvers: [__dirname + "/modules/**/*.ts"],
     authChecker: ({ context: { req } }) => {
       return !!req.session.userId;
     },
@@ -40,7 +30,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema,
-    context: ({ req }): MyContext => ({ req }),
+    context: ({ req, res }): MyContext => ({ req, res }),
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
   });
   const app = Express();

@@ -2,7 +2,7 @@ import Redis from "ioredis";
 
 class RedisSingletone {
   private constructor() {}
-  private static _instance: any | undefined;
+  private static _instance;
 
   public static getInstance() {
     if (this._instance === undefined) {
